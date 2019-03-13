@@ -5,7 +5,13 @@ const autoexec = require("./autoexec.js");
 function createWindow () {
 
     // Create the browser window.
-    autoexec_manager.main_window = new electron.BrowserWindow({ width: 800, height: 600 , frame: false});
+    autoexec_manager.main_window = new electron.BrowserWindow({
+        width: 800,
+        height: 600,
+        frame: false,
+        minHeight: 200,
+        minWidth: 350
+    });
 
     // and load the index.html of the app.
     autoexec_manager.main_window.loadFile('main.html');

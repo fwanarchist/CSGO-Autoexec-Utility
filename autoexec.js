@@ -13,7 +13,7 @@ class AutoExec {
             "sound",
             "voice",
             "crosshair"
-        ];
+        ].sort();
         this.setting_categories = {
             viewmodel:{
                 commands: [
@@ -33,7 +33,7 @@ class AutoExec {
                     "cl_righthand",
                     "muzzleflash_light",
                     "r_drawtracers_firstperson"
-                ],
+                ].sort(),
                 display_name: "Viewmodel"
             },
             hud:{
@@ -50,7 +50,7 @@ class AutoExec {
                     "hud_takesshots",
                     "mapoverview_icon_scale",
                     "cl_showloadout"
-                ],
+                ].sort(),
                 display_name: "HUD"
             },
             radar:{
@@ -60,7 +60,7 @@ class AutoExec {
                     "cl_radar_rotate",
                     "cl_radar_scale",
                     "cl_radar_square_with_scoreboard"
-                ],
+                ].sort(),
                 display_name: "Radar"
             },
             client:{
@@ -89,7 +89,7 @@ class AutoExec {
                     "tv_nochat",
                     "cl_cmdrate",
                     "rate"
-                ],
+                ].sort(),
                 display_name: "Client"
             },
             game:{
@@ -119,7 +119,7 @@ class AutoExec {
                     "cl_autowepswitch",
                     "cl_clanid",
                     "cl_color"
-                ],
+                ].sort(),
                 display_name: "Game"
             },
             sens:{
@@ -138,7 +138,7 @@ class AutoExec {
                     "m_yaw",
                     "sensitivity",
                     "zoom_sensitivity_ratio_mouse"
-                ], display_name: "Mouse"
+                ].sort(), display_name: "Mouse"
             },
             netgraph:{
                 commands:[
@@ -154,7 +154,7 @@ class AutoExec {
                     "net_graphshowsvframerate",
                     "net_graphsolid",
                     "net_graphtext"
-                ],
+                ].sort(),
                 display_name: "Net Graph"
             },
             sound:{
@@ -188,7 +188,7 @@ class AutoExec {
                     "force_audio_english",
                     "dsp_enhance_stereo",
                     "suitvolume"
-                ],
+                ].sort(),
                 display_name: "Sound"
             },
             voice:{
@@ -205,7 +205,7 @@ class AutoExec {
                     "voice_scale",
                     "voice_system_enable",
                     "voice_threshold"
-                ],
+                ].sort(),
                 display_name: "Voice"
             },
             crosshair:{
@@ -236,7 +236,7 @@ class AutoExec {
                     "crosshair",
                     "cl_scalecrosshair",
                     "cl_scalecrosshair"
-                ],
+                ].sort(),
                 display_name: "Crosshair"
             }
         };

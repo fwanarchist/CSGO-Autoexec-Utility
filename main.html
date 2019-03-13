@@ -37,13 +37,24 @@
                 height:100%;
             }
             .main{
-                margin-left: 250px;
-                margin-top:30px;
+                background-color: #444;
+                height: calc(100% - 38px);
+                width: calc(100% - 258px);
+                left: 250px;
+                top: 30px;
+                position: fixed;
+                z-index: 10;
+                overflow-y: scroll;
+                user-select: none;
+                padding:4px;
+                /* display: flex; */
+            }
+            ::-webkit-scrollbar {
+                width: 0px;
             }
             body{
                 margin:0;
                 font-family: sans-serif;
-                background-color: #555;
                 color:white;
             }
             .sidebar-entry{
@@ -59,7 +70,7 @@
                 background-color: #333;
             }
             .title-bar{
-                background-color: #444;
+                background-color: #333;
                 top:0px;
                 left:0px;
                 position: fixed;
@@ -96,6 +107,83 @@
             }
             .title-bar-button-exit:hover{
                 background-color: #C00;
+            }
+            .edit_setting_entry{
+                width: calc(100% - 8px);
+                min-width: 500px;
+                height: 60px;
+                background-color: #333;
+                z-index: 11;
+                display: block;
+                padding: 4px;
+                margin-bottom: 4px;
+            }
+            .edit_setting_entry_top{
+                height: 50%;
+                width: 100%;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 30px;
+                float: left;
+                display: flex;
+            }
+            .edit_setting_entry_left{
+                height: 100%;
+                width: calc(100% - 90px);
+                text-align: center;
+                vertical-align: middle;
+                line-height: 60px;
+                float: left;
+                display: block;
+            }
+            .edit_setting_entry_default{
+                height: 100%;
+                width: 90px;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 30px;
+                float: left;
+                display: block;
+                background-color: #555;
+                position: relative;
+            }
+            .edit_setting_entry_default:hover{
+                background-color: #007fff;
+            }
+            .edit_setting_entry_command{
+                width: max-content;
+                height: 100%;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+            .edit_setting_entry_value {
+                width: 100%;
+                height: 100%;
+                min-width: 50px;
+                margin-left: 4px;
+                margin-right: 4px;
+                padding-left: 4px;
+                padding-right: 4px;
+                background-color: #555;
+                color: white;
+                border:none;
+            }
+            .edit_setting_entry_value:focus {
+                outline-color: #007fff;
+            }
+            .edit_setting_entry_value:hover:not(:focus) {
+                background-color: #007fff;
+            }
+            .edit_setting_entry_desc {
+                height: 50%;
+                width: 100%;
+                display: flex;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 30px;
+                float: left;
+                padding-left: 4px;
+                padding-right: 4px;
             }
         </style>
         <script>
@@ -172,7 +260,9 @@
 
                     autoexec_manager.current_autoexec = new autoexec.AutoExec(cfg_data);
 
-                    display_autoexec();
+                    autoexec_manager.loaded_autoexec = true;
+
+                    show_sidebar(1);
 
                 } else {
                     electron.dialog.showErrorBox("Invalid Path", file_paths[0] + "\\userdata does not exist.");
@@ -182,17 +272,17 @@
 
             function close_button(){
                 electron.remote.app.exit();
-            }
+            };
             function minimize_button(){
                 electron.remote.getCurrentWindow().minimize();
-            }
+            };
             function min_max_button(){
                 if(electron.remote.getCurrentWindow().isMaximized()) {
                     electron.remote.getCurrentWindow().unmaximize();
                 } else {
                     electron.remote.getCurrentWindow().maximize();
                 }
-            }
+            };
 
             function show_sidebar(show_id){
                 let sidebars = [
@@ -208,8 +298,33 @@
                         sidebars[i].hidden = true;
                     }
                 }
-                
-            }
+            };
+
+            function show_edit_category(category){
+                if(!autoexec_manager.loaded_autoexec){
+                    return
+                }
+                let category_element = document.getElementById("edit_category_" + category);
+                if(!autoexec_manager.category_initialized[category]){
+                    let category_data = autoexec_manager.current_autoexec.setting_categories[category];
+                    
+                    for(var i = 0; i < category_data.commands.length; i++){
+                        let command_data = autoexec_manager.current_autoexec.setting_data[category_data.commands[i]];
+                        let new_entry = document.getElementById("edit_setting_template").content.cloneNode(true);
+
+                        new_entry.children[0].innerHTML = new_entry.children[0].innerHTML.replace("--replace-command--", category_data.commands[i]);
+                        new_entry.children[0].innerHTML = new_entry.children[0].innerHTML.replace("--replace-value--", command_data.value);
+                        new_entry.children[0].innerHTML = new_entry.children[0].innerHTML.replace("--replace-value-id--", category_data.commands[i]);
+                        new_entry.children[0].innerHTML = new_entry.children[0].innerHTML.replace("--replace-description--", command_data.desc);
+                        new_entry.children[0].innerHTML = new_entry.children[0].innerHTML.replace("--replace-default-function--", "alert('Not implemented yet ;-;')");
+                        category_element.appendChild(new_entry);
+                    }
+                }
+                for(var i = 0; i < autoexec_manager.current_autoexec.category_array.length; i++){
+                    document.getElementById("edit_category_" + autoexec_manager.current_autoexec.category_array[i]).hidden = true;
+                }
+                category_element.hidden = false;
+            };
 
             // function display_autoexec(){
             //     document.getElementById("edit_sidebar_menu").hidden = true;
@@ -225,7 +340,19 @@
             Object.getOwnPropertyNames
 
             var autoexec_manager = {
-
+                category_initialized:{
+                    viewmodel:false,
+                    hud:false,
+                    radar:false,
+                    client:false,
+                    game:false,
+                    sens:false,
+                    netgraph:false,
+                    sound:false,
+                    voice:false,
+                    crosshair:false
+                },
+                loaded_autoexec: false
             };
         </script>
     </head>
@@ -254,16 +381,16 @@
                 <div id="sidebar_save" class="sidebar-entry" onclick="save_autoexec_button()">Save Autoexec</div>
             </div>
             <div id="sidebar_menu_1" hidden>
-                <div class="sidebar-entry" onclick="show_edit_category('viewmodel')">Viewmodel</div>
-                <div class="sidebar-entry" onclick="show_edit_category('hud')">HUD</div>
-                <div class="sidebar-entry" onclick="show_edit_category('radar')">Radar</div>
                 <div class="sidebar-entry" onclick="show_edit_category('client')">Client</div>
+                <div class="sidebar-entry" onclick="show_edit_category('crosshair')">Crosshair</div>
                 <div class="sidebar-entry" onclick="show_edit_category('game')">Game</div>
+                <div class="sidebar-entry" onclick="show_edit_category('hud')">HUD</div>
                 <div class="sidebar-entry" onclick="show_edit_category('sens')">Mouse</div>
                 <div class="sidebar-entry" onclick="show_edit_category('netgraph')">Net Graph</div>
+                <div class="sidebar-entry" onclick="show_edit_category('radar')">Radar</div>
                 <div class="sidebar-entry" onclick="show_edit_category('sound')">Sound</div>
+                <div class="sidebar-entry" onclick="show_edit_category('viewmodel')">Viewmodel</div>
                 <div class="sidebar-entry" onclick="show_edit_category('voice')">Voice</div>
-                <div class="sidebar-entry" onclick="show_edit_category('crosshair')">Crosshair</div>
             </div>
             <div id="sidebar_menu_2" hidden>
                 <div class="sidebar-entry" onclick="alert(';-;')">Sad Face</div>
@@ -273,7 +400,28 @@
             </div>
         </div>
         <div class="main">
-
+            <template id="edit_setting_template">
+                <div class="edit_setting_entry">
+                    <div class="edit_setting_entry_left">
+                        <div class="edit_setting_entry_top">
+                            <div class="edit_setting_entry_command">--replace-command--</div>
+                            <input class="edit_setting_entry_value" id="command_value_--replace-value-id--" type="text" value="--replace-value--"/>
+                        </div>
+                        <div class="edit_setting_entry_desc">--replace-description--</div>
+                    </div>
+                    <div class="edit_setting_entry_default" onclick="--replace-default-function--">Restore Default</div>
+                </div>
+            </template>
+            <div id="edit_category_viewmodel" hidden></div>
+            <div id="edit_category_hud" hidden></div>
+            <div id="edit_category_radar" hidden></div>
+            <div id="edit_category_client" hidden></div>
+            <div id="edit_category_game" hidden></div>
+            <div id="edit_category_sens" hidden></div>
+            <div id="edit_category_netgraph" hidden></div>
+            <div id="edit_category_sound" hidden></div>
+            <div id="edit_category_voice" hidden></div>
+            <div id="edit_category_crosshair" hidden></div>
         </div>
     </body>
 </html>
