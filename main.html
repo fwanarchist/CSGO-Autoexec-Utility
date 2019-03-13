@@ -5,13 +5,36 @@
         <style>
             .sidebar{
                 background-color: #222;
-                height: 100%;
+                height: calc(100% - 70px);
                 width: 250px;
-                margin-top: 30px;
                 left: 0px;
-                top: 0px;
+                top: 70px;
                 position: fixed;
                 z-index: 10;
+                overflow-y: scroll;
+                user-select: none;
+            }
+            .sidebar-header{
+                background-color: #111;
+                height: 40px;
+                line-height: 40px;
+                width: 250px;
+                left: 0px;
+                top: 30px;
+                position: fixed;
+                z-index: 10;
+                user-select: none;
+                display: flex;
+                text-align: center;
+                vertical-align: middle;
+            }
+            .sidebar-header-entry:hover{
+                background-color: #007fff;
+            }
+            .sidebar-header-entry{
+                top:0px;
+                width:25%;
+                height:100%;
             }
             .main{
                 margin-left: 250px;
@@ -46,6 +69,7 @@
                 -webkit-app-region: drag;
                 line-height: 30px;
                 text-align: center;
+                user-select: none;
             }
             .title-bar-button-container {
                 -webkit-app-region: no-drag;
@@ -101,8 +125,12 @@
                 }
                 throw "Timed Out";
             };
+
             function open_autoexec_button(){
-                alert("Not implemented yet.");
+                alert("Sorry. Not implemented yet ;-;");
+            }
+            function save_autoexec_button(){
+                alert("Sorry. Not implemented yet ;-;");
             }
 
             function open_config_button(){
@@ -144,6 +172,8 @@
 
                     autoexec_manager.current_autoexec = new autoexec.AutoExec(cfg_data);
 
+                    display_autoexec();
+
                 } else {
                     electron.dialog.showErrorBox("Invalid Path", file_paths[0] + "\\userdata does not exist.");
                     return
@@ -164,6 +194,36 @@
                 }
             }
 
+            function show_sidebar(show_id){
+                let sidebars = [
+                    document.getElementById("sidebar_menu_0"),
+                    document.getElementById("sidebar_menu_1"),
+                    document.getElementById("sidebar_menu_2"),
+                    document.getElementById("sidebar_menu_3")
+                ];
+                for(var i = 0; i < 4; i++){
+                    if(i == show_id){
+                        sidebars[i].hidden = false;
+                    } else{
+                        sidebars[i].hidden = true;
+                    }
+                }
+                
+            }
+
+            // function display_autoexec(){
+            //     document.getElementById("edit_sidebar_menu").hidden = true;
+            //     let categories = autoexec_manager.current_autoexec.category_array;
+            //     for(var i = 0; i < categories.length; i++){
+            //         let category = autoexec_manager.current_autoexec.setting_categories[categories[i]];
+            //         let new_entry = document.getElementById("sidebar_entry_template").content.cloneNode(true);
+            //         new_entry.children[0].innerText = category.display_name;
+            //         document.getElementById("category_sidebar_menu").appendChild(new_entry);
+            //     }
+            // }
+
+            Object.getOwnPropertyNames
+
             var autoexec_manager = {
 
             };
@@ -173,32 +233,44 @@
         <div class="title-bar">
             CS:GO Autoexec Util
             <div class="title-bar-button-container">
-                <div class="title-bar-button" onclick="minimize_button()">
-                    <span>-</span>
-                </div>
-                <div class="title-bar-button" onclick="min_max_button()">
-                    <span>M</span>
-                </div>
-                <div class="title-bar-button-exit" onclick="close_button()">
-                    <span>X</span>
-                </div>
+                <div class="title-bar-button" onclick="minimize_button()">-</div>
+                <div class="title-bar-button" onclick="min_max_button()">M</div>
+                <div class="title-bar-button-exit" onclick="close_button()">X</div>
             </div>
         </div>
+        <div class="sidebar-header">
+            <div class="sidebar-header-entry" onclick="show_sidebar(0)">File</div>
+            <div class="sidebar-header-entry" onclick="show_sidebar(1)">Edit</div>
+            <div class="sidebar-header-entry" onclick="show_sidebar(2)">Bind</div>
+            <div class="sidebar-header-entry" onclick="show_sidebar(3)">Test</div>
+        </div>
         <div class="sidebar">
-
-            <div id="file_sidebar_menu">
-                <div id="sidebar_open_config" class="sidebar-entry" onclick="open_config_button()">
-                    <span>
-                        Open Config
-                    </span>
-                </div>
-                <div id="sidebar_open_autoexec" class="sidebar-entry" onclick="open_autoexec_button()">
-                    <span>
-                        Open Autoexec
-                    </span>
-                </div>
+            <template id="sidebar_entry_template">
+                <div class="sidebar-entry" onclick=""></div>
+            </template>
+            <div id="sidebar_menu_0">
+                <div id="sidebar_open_config" class="sidebar-entry" onclick="open_config_button()">Open Config</div>
+                <div id="sidebar_open_autoexec" class="sidebar-entry" onclick="open_autoexec_button()">Open Autoexec</div>
+                <div id="sidebar_save" class="sidebar-entry" onclick="save_autoexec_button()">Save Autoexec</div>
             </div>
-
+            <div id="sidebar_menu_1" hidden>
+                <div class="sidebar-entry" onclick="show_edit_category('viewmodel')">Viewmodel</div>
+                <div class="sidebar-entry" onclick="show_edit_category('hud')">HUD</div>
+                <div class="sidebar-entry" onclick="show_edit_category('radar')">Radar</div>
+                <div class="sidebar-entry" onclick="show_edit_category('client')">Client</div>
+                <div class="sidebar-entry" onclick="show_edit_category('game')">Game</div>
+                <div class="sidebar-entry" onclick="show_edit_category('sens')">Mouse</div>
+                <div class="sidebar-entry" onclick="show_edit_category('netgraph')">Net Graph</div>
+                <div class="sidebar-entry" onclick="show_edit_category('sound')">Sound</div>
+                <div class="sidebar-entry" onclick="show_edit_category('voice')">Voice</div>
+                <div class="sidebar-entry" onclick="show_edit_category('crosshair')">Crosshair</div>
+            </div>
+            <div id="sidebar_menu_2" hidden>
+                <div class="sidebar-entry" onclick="alert(';-;')">Sad Face</div>
+            </div>
+            <div id="sidebar_menu_3" hidden>
+                <div class="sidebar-entry" onclick="electron.remote.BrowserWindow.getFocusedWindow().loadFile('main.html')">Refresh</div>
+            </div>
         </div>
         <div class="main">
 
