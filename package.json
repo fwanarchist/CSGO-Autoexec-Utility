@@ -1,0 +1,35 @@
+{
+  "name": "csgo-autoexec-util",
+  "version": "1.0.0",
+  "description": "Comprehensive autoexec.cfg creation and management tool for CS:GO",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron .",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fwanarchist/CSGO-Autoexec-Utility.git"
+  },
+  "keywords": [
+    "csgo",
+    "autoexec",
+    "counter",
+    "strike",
+    "global",
+    "offensive",
+    "config",
+    "utility",
+    "util",
+    "tool"
+  ],
+  "author": "Puplip",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/fwanarchist/CSGO-Autoexec-Utility/issues"
+  },
+  "homepage": "https://github.com/fwanarchist/CSGO-Autoexec-Utility#readme",
+  "devDependencies": {
+    "electron": "^4.0.8"
+  }
+}
